@@ -11,7 +11,6 @@ namespace PathFinding
         public int Weight { get; set; }
         public int Cost { get; set; }
         public Tile PrevTile { get; set; }
-        public bool IsWalkingable { get; set; }
         public Vector2 Pos { get; private set; }
 
         private GameObject _gameObject;

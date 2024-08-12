@@ -48,14 +48,12 @@ namespace PathFinding
                 for (int c = 0; c < Cols; c++)
                 {
                     Tile tile = new Tile(this, r, c, TileWeight_Default);
-					tile.IsWalkingable = true;
 					tile.InitGameObject(transform, TilePrefab);
 
                     int index = GetTileIndex(r, c);
                     Tiles[index] = tile;
                 }
             }
-
 
             CreateExpensiveArea(3, 3, 9, 1, TileWeight_Expensive);
             CreateExpensiveArea(3, 9, 1, 9, TileWeight_Expensive);
@@ -85,11 +83,13 @@ namespace PathFinding
 			{
                 ResetGrid();
                 endVal.y -= 1;
-                if(endVal.y < 0)
-                {
-                    endVal.y = 0;
-                }
-                Mathf.Abs(endVal.y);
+				if (endVal.y < 0) endVal.y = 0;
+
+				Tile tile = GetTile((int)endVal.y, (int)endVal.x);
+				if (tile.Weight == TileWeight_Expensive) endVal.y += 1;
+			
+
+				Mathf.Abs(endVal.y);
 				end = GetTile((int)endVal.y, (int)endVal.x);
 				playerObj.transform.position = end.Pos;
 			}
@@ -97,10 +97,12 @@ namespace PathFinding
 			{
 				ResetGrid();
                 endVal.y += 1;
-				if (endVal.y >= Rows - 1)
-				{
-					endVal.y = Rows - 1;
-				}
+				if (endVal.y >= Rows - 1) endVal.y = Rows - 1;
+
+				Tile tile = GetTile((int)endVal.y, (int)endVal.x);
+				if (tile.Weight == TileWeight_Expensive) endVal.y -= 1;
+
+				
 				Mathf.Abs(endVal.y);
 				end = GetTile((int)endVal.y, (int)endVal.x);
 				playerObj.transform.position = end.Pos;
@@ -109,10 +111,11 @@ namespace PathFinding
             {
 				ResetGrid();
 				endVal.x += 1;
-				if (endVal.x >= Rows - 1)
-				{
-					endVal.x = Rows - 1;
-				}
+				if (endVal.x >= Rows - 1) endVal.x = Rows - 1;
+				
+				Tile tile = GetTile((int)endVal.y, (int)endVal.x);
+				if (tile.Weight == TileWeight_Expensive) endVal.x -= 1;
+
 				Mathf.Abs(endVal.x);
 				end = GetTile((int)endVal.y, (int)endVal.x);
 				playerObj.transform.position = end.Pos;
@@ -121,10 +124,11 @@ namespace PathFinding
             {
 				ResetGrid();
 				endVal.x -= 1;
-				if (endVal.x < 0)
-				{
-					endVal.x = 0;
-				}
+				if (endVal.x < 0) endVal.x = 0;
+
+				Tile tile = GetTile((int)endVal.y, (int)endVal.x);
+				if (tile.Weight == TileWeight_Expensive) endVal.x += 1;
+
 				Mathf.Abs(endVal.x);
 				end = GetTile((int)endVal.y, (int)endVal.x);
 				playerObj.transform.position = end.Pos;
@@ -189,7 +193,6 @@ namespace PathFinding
                     Tile tile = GetTile(r, c);
                     if (tile != null)
                     {
-                        tile.IsWalkingable = false;
                         tile.Weight = weight;
                     }
                 }
